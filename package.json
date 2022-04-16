@@ -1,0 +1,6 @@
+{
+  "name": "NoteLogin",
+  "version": "1.0.0",
+  "main": "./app/app.js",
+  "license": "MIT"
+}
