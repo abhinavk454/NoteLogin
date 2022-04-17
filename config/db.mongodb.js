@@ -1,6 +1,5 @@
 require("dotenv");
 const mongoose = require("mongoose");
-const env = require("../.env");
 
 var count = 0;
 const mongo_options = {
