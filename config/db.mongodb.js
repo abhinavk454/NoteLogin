@@ -1,4 +1,4 @@
-require("dotenv");
+require("dotenv").config();
 const mongoose = require("mongoose");
 
 var count = 0;
@@ -22,8 +22,8 @@ const connectDB = (uri) => {
 };
 
 try {
-  console.log(process.env.MONGO_URI);
-  connectDB(process.env.MONGO_URI);
+  var uri = process.env.MONGO_URI;
+  connectDB(uri);
 } catch {
   console.log("Connection failed");
 }
