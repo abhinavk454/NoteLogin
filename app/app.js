@@ -22,11 +22,40 @@ app.use(passport.initialize());
 app.use(passport.session());
 initializePassport(passport);
 
+const checkIsAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect("/signin");
+};
+
+const checkIsNotAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    res.redirect("/");
+  }
+  return next();
+};
+
 app.get("/", (req, res) => {
+  console.log(req.user.username);
   res.send("Hello from dev");
 });
-app.post("/signin", (req, res, next) => {});
-app.post("/signup", async (req, res, next) => {
+
+app.post("/fail", (req, res) => {
+  res.status(401).send("Hello fail.");
+});
+
+app.post(
+  "/signin",
+  checkIsNotAuthenticated,
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/fail",
+    // failureFlash: true,
+  })
+);
+
+app.post("/signup", checkIsNotAuthenticated, async (req, res, next) => {
   const { username, password } = req.body;
   if (!(username && password)) {
     res.status(400).json({ message: "Body is required" });
@@ -49,7 +78,10 @@ app.post("/signup", async (req, res, next) => {
   }
 });
 
-app.post("/", (req, res, next) => {});
+app.post("/", checkIsAuthenticated, (req, res, next) => {
+  console.log(req.body);
+  res.send("Hello");
+});
 
 app.listen(port, () => {
   console.log(`Listening on http://localhost:${port} .`);
